@@ -4,20 +4,14 @@
     <meta charset="UTF-8" />
     <title>IPRN Live Auto Viewer</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 30px; background: #1e1e1e; color: #d4d4d4; }
+        body { font-family: Arial, sans-serif; margin: 20px; background: #1e1e1e; color: #d4d4d4; }
         .container { max-width: 900px; margin: auto; background: #252526; padding: 20px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-        h2 { color: #4ec9b0; }
-        p { font-style: italic; color: #ce9178; }
-        pre { background: #1e1e1e; color: #9cdcfe; padding: 15px; border-radius: 5px; overflow-x: auto; font-family: Consolas, monospace; font-size: 14px; }
+        pre { background: #1e1e1e; color: #9cdcfe; padding: 15px; border-radius: 5px; overflow-x: auto; font-family: Consolas, monospace; font-size: 14px; margin: 0; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>IPRN Auto-Refresh SMS/OTP Viewer</h2>
-    <p>Latest data will load automatically on refresh...</p>
-    
-    <h3>Response Output:</h3>
     <pre id="output">Loading live data...</pre>
 </div>
 
@@ -52,13 +46,11 @@ async function fetchJsonData() {
 
         const resultJson = await response.json();
         
-        // এপিআই রেসপন্স থেকে সরাসরি মূল ডেটার লিস্ট বা রেকর্ডগুলো ফিল্টার করে নেওয়া
         let cleanData = resultJson;
         if (resultJson && resultJson.result && resultJson.result.mdr_full_list) {
             cleanData = { "records": resultJson.result.mdr_full_list };
         }
 
-        // ২ নম্বর ছবির মতো প্রফেশনাল ও ক্লিন ফরম্যাটে দেখানোর জন্য
         document.getElementById("output").innerText = JSON.stringify(cleanData, null, 4);
         
     } catch (error) {
