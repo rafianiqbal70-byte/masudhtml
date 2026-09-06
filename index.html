@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>IPRN Live Auto Viewer</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 30px; background: #1e1e1e; color: #d4d4d4; }
+        .container { max-width: 900px; margin: auto; background: #252526; padding: 20px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        h2 { color: #4ec9b0; }
+        p { font-style: italic; color: #ce9178; }
+        pre { background: #1e1e1e; color: #9cdcfe; padding: 15px; border-radius: 5px; overflow-x: auto; font-family: Consolas, monospace; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>IPRN Auto-Refresh SMS/OTP Viewer</h2>
+    <p>Latest data will load automatically on refresh...</p>
+    
+    <h3>Response Output:</h3>
+    <pre id="output">Loading live data...</pre>
+</div>
+
+<script>
+async function fetchJsonData() {
+    const url = "https://api.iprn-elite.com/v1.0?api_key=k1-l6xxdRbixXbsPyjWxyQ";
+    
+    const now = new Date();
+    const endDate = now.toISOString();
+    const startDate = new Date(now.getTime() - (24 * 60 * 60 * 1000)).toISOString();
+
+    const payload = {
+        "id": null,
+        "jsonrpc": "2.0",
+        "method": "sms.mdr_full:get_list",
+        "params": {
+            "filter": {
+                "start_date": startDate,
+                "end_date": endDate
+            },
+            "page": 1,
+            "per_page": 15
+        }
+    };
+
+    try {
+        const response = await fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
+
+        const resultJson = await response.json();
+        document.getElementById("output").innerText = JSON.stringify(resultJson, null, 4);
+        
+    } catch (error) {
+        document.getElementById("output").innerText = "Error: " + error.message;
+    }
+}
+
+window.onload = function() {
+    fetchJsonData();
+};
+</script>
+
+</body>
+</html>
