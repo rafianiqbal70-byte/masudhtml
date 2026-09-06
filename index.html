@@ -51,7 +51,15 @@ async function fetchJsonData() {
         });
 
         const resultJson = await response.json();
-        document.getElementById("output").innerText = JSON.stringify(resultJson, null, 4);
+        
+        // এপিআই রেসপন্স থেকে সরাসরি মূল ডেটার লিস্ট বা রেকর্ডগুলো ফিল্টার করে নেওয়া
+        let cleanData = resultJson;
+        if (resultJson && resultJson.result && resultJson.result.mdr_full_list) {
+            cleanData = { "records": resultJson.result.mdr_full_list };
+        }
+
+        // ২ নম্বর ছবির মতো প্রফেশনাল ও ক্লিন ফরম্যাটে দেখানোর জন্য
+        document.getElementById("output").innerText = JSON.stringify(cleanData, null, 4);
         
     } catch (error) {
         document.getElementById("output").innerText = "Error: " + error.message;
